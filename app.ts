@@ -6,6 +6,8 @@ if(typeof userInput === 'string'){
   text=userInput;
 }
 
+console.log('Hi');
+
 function generateError(message: string, code: number){
   throw {message: message, errorCode: code};
 }
