@@ -7,3 +7,4 @@ function sendAnalytics(data: string){
 }
 
 sendAnalytics('The data');
+
