@@ -1,7 +1,7 @@
-class Department {
+abstract class Department {
   static fiscalYear = "2021";
   protected employees: string[] = [];
-  constructor(private readonly id: string, public name: string) {
+  constructor(protected readonly id: string, public name: string) {
     this.name = name;
     this.id = id;
   }
@@ -10,9 +10,7 @@ class Department {
     return { name: name };
   }
 
-  describe(this: Department) {
-    console.log(` Department (${this.id}): ${this.name}`);
-  }
+  abstract describe(this: Department): void;
 
   addEmployee(employee: string) {
     this.employees.push(employee);
@@ -29,6 +27,9 @@ class ITDeparment extends Department {
   constructor(id: string, public admins: string[]) {
     super(id, "IT");
     // this.admins = admins; //딱히 쓸 필요가 없다. 매개변수 설정할 때 이미 선언을 한 것
+  }
+  describe() {
+    console.log("IT Department - ID " + this.id);
   }
 }
 
@@ -52,6 +53,10 @@ class AccountingDeparment extends Department {
   constructor(id: string, private reports: string[]) {
     super(id, "Accounting");
     this.lastReport = reports[0];
+  }
+
+  describe() {
+    console.log("Accounting Department - ID: " + this.id);
   }
 
   addEmployee(name: string) {
@@ -92,9 +97,9 @@ console.log(accounting.mostRecentReport);
 accounting.addEmployee("박건형");
 accounting.addEmployee("Max");
 
-accounting.printReports();
-
-accounting.printEmployeeInformation();
+// accounting.printReports();
+// accounting.printEmployeeInformation();
+accounting.describe();
 
 // const accoutingCopy = { name: "ss", describe: accounting.describe };
 // accoutingCopy.describe();
