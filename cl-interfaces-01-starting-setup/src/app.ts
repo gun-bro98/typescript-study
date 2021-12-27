@@ -1,9 +1,13 @@
 class Department {
-  // name: string;
+  static fiscalYear = "2021";
   protected employees: string[] = [];
   constructor(private readonly id: string, public name: string) {
     this.name = name;
     this.id = id;
+  }
+
+  static createEmployee(name: string) {
+    return { name: name };
   }
 
   describe(this: Department) {
@@ -29,8 +33,25 @@ class ITDeparment extends Department {
 }
 
 class AccountingDeparment extends Department {
+  private lastReport: string;
+
+  get mostRecentReport() {
+    if (this.lastReport) {
+      return this.lastReport;
+    }
+    throw new Error("No report found.");
+  }
+
+  set mostRecentReport(value: string) {
+    if (!value) {
+      throw new Error("please pass in a valid value!");
+    }
+    this.addReport(value);
+  }
+
   constructor(id: string, private reports: string[]) {
     super(id, "Accounting");
+    this.lastReport = reports[0];
   }
 
   addEmployee(name: string) {
@@ -42,12 +63,16 @@ class AccountingDeparment extends Department {
 
   addReport(text: string) {
     this.reports.push(text);
+    this.lastReport = text;
   }
 
   printReports() {
     console.log(this.reports);
   }
 }
+
+const employee1 = Department.createEmployee("Max");
+console.log(employee1, Department.fiscalYear);
 
 const it = new ITDeparment("d1", ["Max"]);
 it.addEmployee("Max");
@@ -60,8 +85,9 @@ it.printEmployeeInformation();
 console.log(it);
 
 const accounting = new AccountingDeparment("d2", []);
-
+accounting.mostRecentReport = "Year End Project";
 accounting.addReport("Something went wrong...");
+console.log(accounting.mostRecentReport);
 
 accounting.addEmployee("박건형");
 accounting.addEmployee("Max");
@@ -69,8 +95,6 @@ accounting.addEmployee("Max");
 accounting.printReports();
 
 accounting.printEmployeeInformation();
-
-console.log(accounting);
 
 // const accoutingCopy = { name: "ss", describe: accounting.describe };
 // accoutingCopy.describe();
