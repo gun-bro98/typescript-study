@@ -1,41 +1,53 @@
+//TypeScript
+//싱글톤 패턴의 개념이 녹아 있는 class
+
 abstract class Animal {
-  protected kind: string;
-  constructor(kind: string) {
+  static readonly livingPlanet = "earth";
+  constructor(protected kind: string, public habitat: string) {
     this.kind = kind;
+    this.habitat = habitat;
   }
-  abstract beBorn(this: Animal): void;
 
   get currentKind() {
-    return this.kind;
+    if (this.kind) {
+      return this.kind;
+    }
+    throw new Error("There is no kind");
   }
 
-  set currentKind(value: string) {
-    if (!value) {
-      throw new Error("No Parameter");
+  set currentKind(kind: string) {
+    if (!kind) {
+      throw new Error("There is no parameter");
     }
-    this.kind = value;
+    this.kind = kind;
+  }
+
+  abstract printIntroduction(): void;
+
+  static printLivingPlanet() {
+    console.log("우리가 살고 있는 행성: " + this.livingPlanet);
   }
 }
 
 class Cat extends Animal {
-  constructor(kind: string, public name: string) {
-    super(kind);
+  private static instance: Cat;
+  private constructor(kind: string, habitat: string, public kindType: string) {
+    super(kind, habitat);
   }
 
-  printName() {
-    console.log(`이 ${this.kind}의 이름은 ${this.name}`);
+  static getInstance() {
+    if (Cat.instance) {
+      return this.instance;
+    }
+    return new Cat("포유류", "도시", "고양이과");
   }
 
-  beBorn() {
-    console.log(this.kind + "로 태어났다.");
+  //override
+  printIntroduction() {
+    console.log("이 동물의 종류는 " + this.kind + "입니다.");
+    console.log("그리고 서식지는 " + this.habitat + "입니다.");
+    console.log("이 동물의 세부적인 종류는" + this.kindType + "입니다.");
   }
 }
-const cat = new Cat("고양이", "고양희");
-cat.printName();
-cat.beBorn();
-console.log(cat.currentKind);
-
-// const cat = new Animal("Mammalia");
-
-//결과
-//Mammalia
+const cat = Cat.getInstance();
+cat.printIntroduction();
