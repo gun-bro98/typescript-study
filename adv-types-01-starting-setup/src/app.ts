@@ -7,7 +7,7 @@ type Employee = {
   name: string;
   startDate: Date;
 };
-
+// intersection type
 type ElevatedEmployee = Admin & Employee;
 
 const el: ElevatedEmployee = {
@@ -39,10 +39,10 @@ result.split(" ");
 const fetchedUserData = {
   id: "u1",
   name: "gunbro",
-  // job: {
-  //   title: "FE Developer",
-  //   description: "I am currently a college student. ",
-  // },
+  job: {
+    title: "FE Developer",
+    description: "I am currently a college student. ",
+  },
 };
 //일반 자바스크립트에서 오류 피하기
 // console.log(fetchedUserData.job && fetchedUserData.job.title );
@@ -50,6 +50,14 @@ const fetchedUserData = {
 //물음표 앞에 있는 요소가 정의되지 않았다면 해당 요소에 접근하지 않는다.
 console.log(fetchedUserData?.job?.title);
 
+// Nullish coalescing => 무효 합체? nullish 병합
+
+const userInput = null;
+//null과 undefined에만 한정해서 fallback 값(뒤의 값)이 사용되어야한다.
+//이게 nullish 병합
+const storedData = userInput ?? "DEFAULT";
+
+console.log(storedData);
 // type UnknownEmployee = Employee | Admin;
 
 // function printEmployeeInformation(emp: UnknownEmployee) {
