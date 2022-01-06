@@ -16,12 +16,18 @@
 // });
 //타입이 고정이 안되어 있을 때 사용하는 방식
 
-function merge<T, U>(objA: T, objB: U) {
+// function merge<T, U>(objA: T, objB: U) {
+//   return Object.assign(objA, objB);
+// }
+
+// const mergedObj = merge<{ name: string; hobbies: string[] }, { age: number }>(
+//   { name: "Park", hobbies: ["Sports"] },
+//   { age: 25 }
+// );
+//T와 U를 object로 제한 인터페이스를 할당해서 제한 할 수도 있다.
+function merge<T extends object, U extends object>(objA: T, objB: U) {
   return Object.assign(objA, objB);
 }
 
-const mergedObj = merge<{ name: string; hobbies: string[] }, { age: number }>(
-  { name: "Park", hobbies: ["Sports"] },
-  { age: 25 }
-);
+const mergedObj = merge({ name: "Park", hobbies: ["Sports"] }, { age: 25 });
 console.log(mergedObj);
