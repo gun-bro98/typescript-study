@@ -57,7 +57,13 @@ function extractAndConvert<T extends object, U extends keyof T>(
 }
 
 extractAndConvert({ name: "gunbro" }, "name");
+//만약 제네릭 쓰지 않고 유니온 타입으로 해결한다고 하면, 일일이 타입을 다 정해줘야한다.
+//그리고 유니온 타입만으로 관리한다면 클래스에 하나의 타입으로 고수한다기 보다는 여러 타입을 쓸수
+//있다가 된다.
 
+//유니온 타입은 매번 여러 타입 중 하나로 함수를 호출하려고 하는 경우
+//제네릭 타입은 전체 클래스 인스턴스를 생성하거나 함수를 생성하고 그다음부터 계속 같은 타입을
+//사용해서 해당 타입으로 고정하고 싶을 때 사용. 그래서 하나의 타입만 사용하고 싶을 때 사용하자
 class DataStorage<T extends string | number | boolean> {
   private data: T[] = [];
 
