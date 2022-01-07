@@ -90,3 +90,26 @@ console.log(textStorage.getItems());
 // objStorage.addItem({ name: "Park" });
 // objStorage.removeItem(maxObj);
 // console.log(objStorage.getItems());
+
+//일반 유틸리티 타입
+//1. partial를 사용하면 인터페이스에 있는 모든 속성이 객체 안에 있을 필요가 없다.
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(
+  title: string,
+  description: string,
+  date: Date
+): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+//2. Readonly
+const names: Readonly<string[]> = ["Max", "Anna"];
+// names.push("Park");
