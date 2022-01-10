@@ -19,6 +19,7 @@ function WithTemplate(template: string, hookId: string) {
   //   }
   // };
   return function (constructor: any) {
+    console.log("Rendering template");
     const hookEl = document.getElementById(hookId);
     const p = new constructor();
     if (hookEl) {
@@ -31,7 +32,10 @@ function WithTemplate(template: string, hookId: string) {
 //@은 타입스크립트에서 인식하는 특별한 식별자
 //@뒤에는 함수가 나오는데 이건 실행이 아니라 지목이다.
 //자바스크립트가 클래스 정의, 생성자 함수 정의를 찾으면 데코레이터가 실행됨
-// @Logger("LOGGING - PERSON")
+//실행 순서는 아래에서 위로 순이다.
+//대신 데코레이터 팩토리를 써서 사용하는 경우 반환하기 전에
+//어떠한 이벤트를 발생시킨다면 그게 먼저 실행된다.
+@Logger("LOGGING - PERSON")
 @WithTemplate("<h1>My Person Object<h2>", "app")
 class Person {
   name = "Max";
