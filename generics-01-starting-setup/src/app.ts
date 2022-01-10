@@ -25,6 +25,7 @@
 //   { age: 25 }
 // );
 //T와 U를 object로 제한 인터페이스를 할당해서 제한 할 수도 있다.
+//제네릭 타입은 타입 안전성과 융통성의 완벽한 조화를 준다.
 function merge<T extends object, U extends object>(objA: T, objB: U) {
   return Object.assign(objA, objB);
 }
@@ -56,3 +57,65 @@ function extractAndConvert<T extends object, U extends keyof T>(
 }
 
 extractAndConvert({ name: "gunbro" }, "name");
+//만약 제네릭 쓰지 않고 유니온 타입으로 해결한다고 하면, 일일이 타입을 다 정해줘야한다.
+//그리고 유니온 타입만으로 관리한다면 클래스에 하나의 타입으로 고수한다기 보다는 여러 타입을 쓸수
+//있다가 된다.
+
+//유니온 타입은 매번 여러 타입 중 하나로 함수를 호출하려고 하는 경우
+//제네릭 타입은 전체 클래스 인스턴스를 생성하거나 함수를 생성하고 그다음부터 계속 같은 타입을
+//사용해서 해당 타입으로 고정하고 싶을 때 사용. 그래서 하나의 타입만 사용하고 싶을 때 사용하자
+class DataStorage<T extends string | number | boolean> {
+  private data: T[] = [];
+
+  addItem(item: T) {
+    this.data.push(item);
+  }
+
+  removeItem(item: T) {
+    if (this.data.indexOf(item) === -1) {
+      return;
+    }
+    this.data.splice(this.data.indexOf(item), 1); // item이 참조형 타입일 때 -1
+  }
+
+  getItems() {
+    return [...this.data];
+  }
+}
+
+const textStorage = new DataStorage<string>();
+textStorage.addItem("Max");
+textStorage.addItem("Park");
+textStorage.removeItem("Park");
+console.log(textStorage.getItems());
+
+// const numberStorage = new DataStorage<string>();
+// const objStorage = new DataStorage<object>();
+// const maxObj = { name: "Max" };
+// objStorage.addItem(maxObj);
+// objStorage.addItem({ name: "Park" });
+// objStorage.removeItem(maxObj);
+// console.log(objStorage.getItems());
+
+//일반 유틸리티 타입
+//1. partial를 사용하면 인터페이스에 있는 모든 속성이 객체 안에 있을 필요가 없다.
+interface CourseGoal {
+  title: string;
+  description: string;
+  completeUntil: Date;
+}
+
+function createCourseGoal(
+  title: string,
+  description: string,
+  date: Date
+): CourseGoal {
+  let courseGoal: Partial<CourseGoal> = {};
+  courseGoal.title = title;
+  courseGoal.description = description;
+  courseGoal.completeUntil = date;
+  return courseGoal as CourseGoal;
+}
+//2. Readonly
+const names: Readonly<string[]> = ["Max", "Anna"];
+// names.push("Park");
