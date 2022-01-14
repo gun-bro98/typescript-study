@@ -51,9 +51,34 @@ console.log(pers);
 
 // ---
 
-function Log(target: any, propertyName: string | symbol) {
-  console.log("Property decorator!");
+function Log(target: any, propertyName: string | Symbol) {
+  console.log("Property decorator!"); //속성 데코레이터
   console.log(target, propertyName);
+}
+
+function Log2(target: any, name: string, descriptor: PropertyDescriptor) {
+  console.log("Accessor decorator"); //접근자 데코레이터
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+function Log3(
+  target: any,
+  name: string | Symbol,
+  descriptor: PropertyDescriptor
+) {
+  console.log("Method decorator"); //함수 데코레이터
+  console.log(target);
+  console.log(name);
+  console.log(descriptor);
+}
+
+function Log4(target: any, name: string | Symbol, position: number) {
+  console.log("Parameter decorator"); //매개변수 데코레이터
+  console.log(target);
+  console.log(name);
+  console.log(position);
 }
 
 class Product {
@@ -61,20 +86,21 @@ class Product {
   title: string;
   private _price: number;
 
-  constructor(t: string, p: number) {
-    this.title = t;
-    this._price = p;
-  }
-
+  @Log2
   set price(val: number) {
     if (val > 0) {
-      this.price = val;
+      this._price = val;
     } else {
       throw new Error("Invalid Price - should be positive!");
     }
   }
 
-  getPriceWithTax(tax: number) {
+  constructor(t: string, p: number) {
+    this.title = t;
+    this._price = p;
+  }
+  @Log3
+  getPriceWithTax(@Log4 tax: number) {
     return this._price * (1 + tax);
   }
 }

@@ -134,6 +134,7 @@ console.log(storedData);
 //   console.log("달리는 속도" + speed);
 // }
 // moveAnimal({ type: "bird", flyingSpeed: 30 });
+
 // //HTMLInputElement 사용하기 1: 타입을 정확하게 알 때
 // // const userInputElement = <HTMLInputElement>document.getElementById("user-input")!;
 // // userInputElement.value = "Hi there!";
@@ -161,3 +162,38 @@ console.log(storedData);
 // const errorBag: ErrorContainer = {
 //   email: "Not a valid email",
 // };
+
+interface Bird {
+  type: "bird";
+  flyingSpeed: number;
+}
+
+interface Hourse {
+  type: "hourse";
+  runningSpeed: number;
+}
+
+type Animal = Bird | Hourse;
+
+function moveAnimal(animal: Animal) {
+  let speed;
+  switch (animal.type) {
+    case "bird":
+      speed = animal.flyingSpeed;
+      break;
+    case "hourse":
+      speed = animal.runningSpeed;
+      break;
+  }
+  console.log("이 동물의 속도는 " + speed + "입니다.");
+}
+const bird: Animal = {
+  type: "bird",
+  flyingSpeed: 30,
+};
+moveAnimal(bird);
+
+const inputEl = document.getElementById("input1");
+if (inputEl) {
+  (inputEl as HTMLInputElement).value = "안녕하세요";
+}
