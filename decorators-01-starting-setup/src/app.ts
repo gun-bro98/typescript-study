@@ -158,7 +158,10 @@ const registeredValidators: ValidatorConfig = {};
 function Required(target: any, propName: string) {
   registeredValidators[target.constructor.name] = {
     ...registeredValidators[target.constructor.name],
-    [propName]: ["required"],
+    [propName]: [
+      ...(registeredValidators[target.constructor.name]?.[target] ?? []),
+      "required",
+    ],
   };
   console.log(registeredValidators["Course"]);
 }
@@ -166,7 +169,10 @@ function Required(target: any, propName: string) {
 function PositiveNumber(target: any, propName: string) {
   registeredValidators[target.constructor.name] = {
     ...registeredValidators[target.constructor.name],
-    [propName]: ["positive"],
+    [propName]: [
+      ...(registeredValidators[target.constructor.name]?.[propName] ?? []),
+      "positive",
+    ],
   };
   console.log(registeredValidators["Course"]);
 }
@@ -180,6 +186,7 @@ function validate(obj: any) {
   let isValid = true;
   for (const prop in objValidatorConfig) {
     for (const validator of objValidatorConfig[prop]) {
+      console.log(validator);
       switch (validator) {
         case "required":
           // !!는 true나 false 값으로 만들기 위해 사용함
