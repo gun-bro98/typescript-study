@@ -144,4 +144,85 @@ const button = document.querySelector("button")!;
 //bind를 쓰는 이유는 this가 가리키는 게 정확하게 잡히지 않을 때
 //bind를 써서 p를 정확하게 잡아서 this가 정확하게 message를 찾음
 button.addEventListener("click", p.showMessage);
-console.log(p);
+
+//  ---
+
+interface ValidatorConfig {
+  [property: string]: {
+    [validatableProp: string]: string[]; // ['required', 'positive']
+  };
+}
+
+const registeredValidators: ValidatorConfig = {};
+// 속성을 대상으로 할 때는 설명자 없음 => descriptor: PropertyDescriptor => X
+function Required(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    [propName]: ["required"],
+  };
+  console.log(registeredValidators["Course"]);
+}
+
+function PositiveNumber(target: any, propName: string) {
+  registeredValidators[target.constructor.name] = {
+    ...registeredValidators[target.constructor.name],
+    [propName]: ["positive"],
+  };
+  console.log(registeredValidators["Course"]);
+}
+
+function validate(obj: any) {
+  const objValidatorConfig = registeredValidators[obj.constructor.name];
+  console.log(registeredValidators);
+  if (!objValidatorConfig) {
+    return true;
+  }
+  let isValid = true;
+  for (const prop in objValidatorConfig) {
+    for (const validator of objValidatorConfig[prop]) {
+      switch (validator) {
+        case "required":
+          // !!는 true나 false 값으로 만들기 위해 사용함
+          //원래 obj[prop]은 boolean으로 안나오지만, 부정하면서 bollean 값으로 바뀌고, 다시
+          //부정해서 원래 값이 있었더라면 true를 주는 것
+          isValid = isValid && !!obj[prop];
+          break;
+        case "positive":
+          isValid = isValid && obj[prop] > 0;
+          break;
+      }
+    }
+  }
+  return isValid;
+}
+
+class Course {
+  @Required
+  title: string;
+  @PositiveNumber
+  price: number;
+
+  constructor(t: string, p: number) {
+    this.title = t;
+    this.price = p;
+  }
+}
+
+const courseForm = document.querySelector("form")!;
+courseForm.addEventListener("submit", (event) => {
+  event.preventDefault();
+  const titleEl = document.getElementById("title") as HTMLInputElement;
+  const priceEl = document.getElementById("price") as HTMLInputElement;
+
+  const title = titleEl.value;
+  const price = +priceEl.value;
+
+  const createdCourse = new Course(title, price);
+
+  if (!validate(createdCourse)) {
+    alert("Invalid input, please try again!");
+    return;
+  }
+
+  console.log(createdCourse);
+});
