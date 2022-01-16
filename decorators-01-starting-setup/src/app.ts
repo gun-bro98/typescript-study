@@ -22,6 +22,7 @@ function WithTemplate(template: string, hookId: string) {
     originalConstructor: T
   ) {
     //원래는 리턴이 없었는데, 인스턴스화 할 때만 발생 시키기 위해서 리턴할 때 클래스를 보내주는 것
+    //기존에 있던 클래스의 내용이 그대로 유지 되면서 내용이 추가된다.
     return class extends originalConstructor {
       constructor(..._: any[]) {
         super();
@@ -114,3 +115,33 @@ class Product {
 
 const p1 = new Product("Book", 19);
 const p2 = new Product("Book 2", 29);
+
+function Autobind(_: any, _2: string, descriptor: PropertyDescriptor) {
+  const originalMethod = descriptor.value;
+  const adjDescriptor: PropertyDescriptor = {
+    configurable: true,
+    enumerable: false,
+    get() {
+      //this는 PropertyDescriptor 이것을 가리키므로 예전에 있던 설명자에 덮어쓴다.
+      const boundFn = originalMethod.bind(this);
+      return boundFn;
+    },
+  };
+  return adjDescriptor;
+}
+
+class Printer {
+  message = "This work!";
+  @Autobind
+  showMessage() {
+    console.log(this.message);
+  }
+}
+
+const p = new Printer();
+
+const button = document.querySelector("button")!;
+//bind를 쓰는 이유는 this가 가리키는 게 정확하게 잡히지 않을 때
+//bind를 써서 p를 정확하게 잡아서 this가 정확하게 message를 찾음
+button.addEventListener("click", p.showMessage);
+console.log(p);
