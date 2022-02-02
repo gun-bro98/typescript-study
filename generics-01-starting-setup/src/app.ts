@@ -56,7 +56,7 @@ function extractAndConvert<T extends object, U extends keyof T>(
   return obj[key];
 }
 
-extractAndConvert({ name: "gunbro" }, "name");
+console.log(extractAndConvert({ name: "gunbro" }, "name"));
 //만약 제네릭 쓰지 않고 유니온 타입으로 해결한다고 하면, 일일이 타입을 다 정해줘야한다.
 //그리고 유니온 타입만으로 관리한다면 클래스에 하나의 타입으로 고수한다기 보다는 여러 타입을 쓸수
 //있다가 된다.
@@ -119,3 +119,17 @@ function createCourseGoal(
 //2. Readonly
 const names: Readonly<string[]> = ["Max", "Anna"];
 // names.push("Park");
+
+type Name = [
+  {
+    name: string;
+  }
+];
+
+let array: Name= [{name: "park"}];
+
+const insertData = <T extends object>(data: T, array: object[]): object[]  => {
+  array.push(data);
+  return array;
+}
+console.log(insertData({name: "gunbro"}, array));

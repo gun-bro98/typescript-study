@@ -53,10 +53,39 @@ class ProjectInput {
     this.configure();
     this.attach();
   }
+
+  private gatherUserInput(): [string, string, number] | void {
+    const enteredTitle = this.titleInputElement.value;
+    const enteredDescription = this.descriptionInputElement.value;
+    const enteredPeople = this.peopleInputElement.value;
+
+    if (
+      enteredTitle.trim().length === 0 ||
+      enteredDescription.trim().length === 0 ||
+      enteredPeople.trim().length === 0
+    ) {
+      alert("입력이 유효하지 않아요! 다시 해주세요!");
+      return;
+    }else {
+      return [enteredTitle, enteredDescription, +enteredPeople];
+    }
+  }
+
+  private clearInputs() {
+    this.titleInputElement.value = '';
+    this.descriptionInputElement.value = '';
+    this.peopleInputElement.value = '';
+  }
+
   @autobind
   private submitHandler(event: Event) {
     event.preventDefault();
-    console.log(this.titleInputElement.value);
+    const userInput = this.gatherUserInput();
+    if(Array.isArray(userInput)){
+      const [title, desc, people] = userInput;
+      console.log(title, desc, people);
+      this.clearInputs();
+    }
   }
   // submitHandler 메소드를 이벤트 리스너에 바인드히면, 실행되는 해당 매소드는 다른 무언가로 바인드되는 this가 있어야 한다.
   // 여기서 this와 submitHandler this와 같은 클래스를 가리키게 된다.
